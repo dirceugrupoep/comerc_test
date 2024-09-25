@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: comerc_test_app
+    volumes:
+      - .:/var/www
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - app-network
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=comerc_test
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+    command: php -S 0.0.0.0:8000 -t public  # Comando para rodar o servidor Lumen automaticamente
+
+  db:
+    image: mysql:5.7
+    container_name: comerc_test_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: comerc_test
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
