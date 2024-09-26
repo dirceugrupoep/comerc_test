@@ -20,29 +20,29 @@ class ProductsTableSeeder extends Seeder
                 'nome' => 'Pastel de Carne',
                 'preco' => 12.50,
                 'foto' => 'img/image.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),,
+                'updated_at' => Carbon::now(),,
             ],
             [
                 'nome' => 'Pastel de Queijo',
                 'preco' => 12.50,
                 'foto' => 'img/image.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),,
+                'updated_at' => Carbon::now(),,
             ],
             [
                 'nome' => 'Pastel de Frango',
                 'preco' => 12.50,
                 'foto' => 'img/image.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),,
+                'updated_at' => Carbon::now(),,
             ],
             [
                 'nome' => 'Pastel Especial',
                 'preco' => 22.75,
                 'foto' => 'img/image.jpg',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => Carbon::now(),,
+                'updated_at' => Carbon::now(),,
             ]
         ]);
     }
