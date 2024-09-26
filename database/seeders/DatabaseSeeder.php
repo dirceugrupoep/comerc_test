@@ -18,8 +18,6 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             ClientsTableSeeder::class,
             ProductsTableSeeder::class,
-            OrdersTableSeeder::class,
-            OrderProductTableSeeder::class,
         ]);
     }
 }
