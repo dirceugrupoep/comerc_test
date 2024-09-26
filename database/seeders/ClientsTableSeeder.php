@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Client;
+use Carbon\Carbon;
 
 class ClientsTableSeeder extends Seeder
 {
@@ -27,7 +28,7 @@ class ClientsTableSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'nome' => 'D�bora Silva De Oliveira',
+                'nome' => 'Débora Silva De Oliveira',
                 'email' => 'dirceu31013375858@gmail.com',
                 'telefone' => '11911459663',
                 'data_nascimento' => '1983-10-01',

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Order;
+use Carbon\Carbon;
 
 class OrdersTableSeeder extends Seeder
 {
