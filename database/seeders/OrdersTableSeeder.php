@@ -16,11 +16,11 @@ class OrdersTableSeeder extends Seeder
     public function run()
     {
         Order::insert([
-            ['cliente_id' => 1, 'created_at' => now(), 'updated_at' => now()],
-            ['cliente_id' => 1, 'created_at' => now(), 'updated_at' => now()],
-            ['cliente_id' => 1, 'created_at' => now(), 'updated_at' => now()],
-            ['cliente_id' => 2, 'created_at' => now(), 'updated_at' => now()],
-            ['cliente_id' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['cliente_id' => 1, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),],
+            ['cliente_id' => 1, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),],
+            ['cliente_id' => 1, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),],
+            ['cliente_id' => 2, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),],
+            ['cliente_id' => 2, 'created_at' => Carbon::now(), 'updated_at' => Carbon::now(),],
         ]);
     }
 }

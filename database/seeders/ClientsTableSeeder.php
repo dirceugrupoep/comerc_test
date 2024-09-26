@@ -24,8 +24,8 @@ class ClientsTableSeeder extends Seeder
                 'endereco' => 'Rua tavares, 123',
                 'bairro' => 'Bairro',
                 'cep' => '12345-678',
-                'created_at' => Carbon::now(),,
-                'updated_at' => Carbon::now(),,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ],
             [
                 'nome' => 'Débora Silva De Oliveira',
@@ -35,8 +35,8 @@ class ClientsTableSeeder extends Seeder
                 'endereco' => 'Rua tavares, 123',
                 'bairro' => 'Bairro',
                 'cep' => '12345-678',
-                'created_at' => Carbon::now(),,
-                'updated_at' => Carbon::now(),,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
             ]
         ]);
     }
