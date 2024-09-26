@@ -227,7 +227,7 @@ Ao criar um pedido, um email é enviado automaticamente ao cliente com os detalh
 O projeto utiliza o **PHPUnit** para testes unitários. Para rodar os testes, execute o seguinte comando:
 
 ```bash
-docker exec -it comerc_test_app_1 ./vendor/bin/phpunit
+docker exec -it comerc_test_app ./vendor/bin/phpunit
 ```
 
 Os testes estão localizados na pasta `tests/`.
@@ -237,7 +237,7 @@ Os testes estão localizados na pasta `tests/`.
 O código está conforme o padrão **PSR-12**. Para verificar se o código segue esse padrão, utilize o **PHP_CodeSniffer**:
 
 ```bash
-docker exec -it comerc_test_app_1 ./vendor/bin/phpcs --standard=PSR12 app/ routes/ database/
+docker exec -it comerc_test_app ./vendor/bin/phpcs --standard=PSR12 app/ routes/ database/
 ```
 
 ### 10. Variáveis de Ambiente
@@ -258,7 +258,7 @@ DB_USERNAME=root
 DB_PASSWORD=root
 
 CACHE_DRIVER=file
-QUEUE_CONNECTION=database
+QUEUE_CONNECTION=sync
 
 MAIL_MAILER=smtp
 MAIL_HOST=
