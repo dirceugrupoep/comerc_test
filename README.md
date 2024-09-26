@@ -49,7 +49,7 @@ Este comando irá inicializar o ambiente com os seguintes serviços:
 Dentro do container, execute o comando para instalar as dependências via **Composer**:
 
 ```bash
-docker exec -it comerc_test_app_1 composer install
+docker exec -it comerc_test_app composer install
 ```
 
 ### 5. Configurar o Banco de Dados
@@ -57,13 +57,13 @@ docker exec -it comerc_test_app_1 composer install
 O arquivo `.env` já está configurado para o uso do banco de dados MySQL. Agora, rode as migrações para criar as tabelas:
 
 ```bash
-docker exec -it comerc_test_app_1 php artisan migrate
+docker exec -it comerc_test_app php artisan migrate
 ```
 
 Se você deseja popular o banco com dados de exemplo (seeders):
 
 ```bash
-docker exec -it comerc_test_app_1 php artisan db:seed
+docker exec -it comerc_test_app php artisan db:seed
 ```
 
 ### 6. Gerar a Chave JWT
@@ -71,7 +71,7 @@ docker exec -it comerc_test_app_1 php artisan db:seed
 A API usa autenticação JWT. Para gerar uma chave secreta, execute o comando abaixo:
 
 ```bash
-docker exec -it comerc_test_app_1 php artisan jwt:secret
+docker exec -it comerc_test_app php artisan jwt:secret
 ```
 
 ### 7. Endpoints Disponíveis
