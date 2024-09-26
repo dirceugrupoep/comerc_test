@@ -1,3 +1,4 @@
+
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -68,13 +69,13 @@ $app->configure('mail');
 | Register Middleware
 |--------------------------------------------------------------------------
 |
-| Here we will register the middleware with the application. These can
+| Here we register the middleware with the application. These can
 | be global middleware that run before and after each request into a
 | route or middleware that'll be assigned to some specific routes.
 |
 */
 
-// Definir o middleware JWT
+// Define JWT middleware
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'jwt.auth' => Tymon\JWTAuth\Middleware\GetUserFromToken::class,
@@ -92,22 +93,23 @@ $app->routeMiddleware([
 |
 */
 
-// Registrar o provedor JWTAuth
+// Register JWTAuth provider
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
-// Registrar o provedor de e-mail
-$app->register(Illuminate\Mail\MailServiceProvider::class);
+// Register the mail service provider only if it's not already declared
+if (!class_exists('Mail')) {
+    $app->register(Illuminate\Mail\MailServiceProvider::class);
+}
 
 /*
 |--------------------------------------------------------------------------
-| Enable Facade for Mail
+| Enable Facades
 |--------------------------------------------------------------------------
 |
-| We'll enable the Facade for Mail so we can easily send emails.
+| We enable the Facade for Mail to easily send emails.
 |
 */
 
-class_alias(Illuminate\Support\Facades\Mail::class, 'Mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -127,3 +129,4 @@ $app->router->group([
 });
 
 return $app;
+
