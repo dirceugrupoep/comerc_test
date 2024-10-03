@@ -16,4 +16,6 @@ class Product extends Model
         'preco',
         'foto'
     ];
+
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 }

@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use App\Models\Product;
 
 class ProductTest extends TestCase
 {
@@ -11,9 +12,68 @@ class ProductTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Garantir que o usuário admin seja criado no ambiente de teste
         $this->artisan('db:seed', ['--class' => 'AdminSeeder']);
+    }
+
+    public function testShouldReturnAllProducts()
+    {
+        Product::factory()->count(3)->create();
+
+        $this->json('GET', '/products', [], ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200)
+             ->seeJsonStructure([
+                 '*' => ['id', 'nome', 'preco', 'foto']
+             ]);
+    }
+
+    public function testShouldCreateProduct()
+    {
+        $parameters = [
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ];
+
+        $this->json('POST', '/products', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(201)
+             ->seeJson($parameters);
+
+        $this->seeInDatabase('produtos', ['nome' => 'Product Test']);
+    }
+
+    public function testShouldShowProduct()
+    {
+        $product = Product::factory()->create();
+
+        $this->json('GET', "/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200)
+             ->seeJson(['id' => $product->id, 'nome' => $product->nome]);
+    }
+
+    public function testShouldUpdateProduct()
+    {
+        $product = Product::factory()->create();
+
+        $updateData = [
+            'nome' => 'Updated Product',
+            'preco' => 200.00
+        ];
+
+        $this->json('PUT', "/products/{$product->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200)
+             ->seeJson($updateData);
+
+        $this->seeInDatabase('produtos', ['nome' => 'Updated Product']);
+    }
+
+    public function testShouldDeleteProduct()
+    {
+        $product = Product::factory()->create();
+
+        $this->json('DELETE', "/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200);
+
+        $this->notSeeInDatabase('produtos', ['id' => $product->id]);
     }
 
     private function getToken()
@@ -30,24 +90,5 @@ class ProductTest extends TestCase
         }
 
         return $data['token'];
-    }
-
-    public function testShouldReturnAllProducts()
-    {
-        $this->json('GET', '/products', [], ['Authorization' => 'Bearer ' . $this->getToken()])
-             ->seeStatusCode(200);
-    }
-
-    public function testShouldCreateProduct()
-    {
-        $parameters = [
-            'nome' => 'Product 1',
-            'preco' => 19.99,
-            'foto' => 'image.jpg',
-        ];
-
-        $this->json('POST', '/products', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
-             ->seeStatusCode(201)
-             ->seeJson($parameters);
     }
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 require_once __DIR__.'/../vendor/autoload.php';
@@ -62,7 +61,19 @@ $app->singleton(
 $app->configure('app');
 $app->configure('auth');
 $app->configure('jwt'); 
-$app->configure('mail'); 
+$app->configure('mail');  // Carrega o arquivo de configuração para o Mail
+
+/*
+|--------------------------------------------------------------------------
+| Register Facades
+|--------------------------------------------------------------------------
+|
+| We will register the facades which allow easy usage of static proxies.
+| For example, you may use the "Mail" facade for sending email easily.
+|
+*/
+
+class_alias(Illuminate\Support\Facades\Mail::class, 'Mail'); // Habilita o Facade de Mail
 
 /*
 |--------------------------------------------------------------------------
@@ -96,17 +107,16 @@ $app->routeMiddleware([
 // Register JWTAuth provider
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
-// Register the mail service provider only if it's not already declared
-if (!class_exists('Mail')) {
-    $app->register(Illuminate\Mail\MailServiceProvider::class);
-}
+// Register the mail service provider
+$app->register(Illuminate\Mail\MailServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
 | Enable Facades
 |--------------------------------------------------------------------------
 |
-| We enable the Facade for Mail to easily send emails.
+| Facades allow for a "static" interface to classes that are available
+| in the application's service container.
 |
 */
 
@@ -128,4 +138,3 @@ $app->router->group([
 });
 
 return $app;
-

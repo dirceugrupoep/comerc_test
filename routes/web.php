@@ -19,30 +19,22 @@ $router->get('/', function () use ($router) {
 
 $router->post('/login', 'AuthController@login');
 
-// Rotas protegidas por JWT
-$router->group(['middleware' => 'jwt.auth'], function () use ($router) {
-    $router->get('/profile', function () {
-        return auth()->user();
-    });
-});
+$router->group(['prefix' => 'api/v1', 'middleware' => 'jwt.auth'], function () use ($router) {
+    
+    $router->get('/profile', 'AuthController@profile');
 
-$router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/clients', 'ClientController@index');
     $router->get('/clients/{id}', 'ClientController@show');
     $router->post('/clients', 'ClientController@store');
     $router->put('/clients/{id}', 'ClientController@update');
     $router->delete('/clients/{id}', 'ClientController@destroy');
-});
 
-$router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/products', 'ProductController@index');
     $router->get('/products/{id}', 'ProductController@show');
     $router->post('/products', 'ProductController@store');
     $router->put('/products/{id}', 'ProductController@update');
     $router->delete('/products/{id}', 'ProductController@destroy');
-});
 
-$router->group(['middleware' => 'jwt.auth'], function () use ($router) {
     $router->get('/orders', 'OrderController@index');
     $router->get('/orders/{id}', 'OrderController@show');
     $router->post('/orders', 'OrderController@store');

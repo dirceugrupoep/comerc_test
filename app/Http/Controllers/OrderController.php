@@ -2,40 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Client;
-use App\Models\Product;
+use App\Http\Requests\OrderRequest;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
+
 class OrderController extends Controller
 {
+    protected $orderService;
+
+    public function __construct(OrderService $orderService)
+    {
+        $this->orderService = $orderService;
+    }
+
     public function index()
     {
-        return Order::with('client', 'products')->get();
+        return response()->json($this->orderService->getAllOrders());
     }
 
     public function show($id)
     {
-        $order = Order::with('client', 'products')->find($id);
+        $order = $this->orderService->getOrderById($id);
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
 
-        return $order;
+        return response()->json($order);
     }
 
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'cliente_id' => 'required|exists:clientes,id',
-            'produtos' => 'required|array',
-            'produtos.*.id' => 'exists:produtos,id',
-            'produtos.*.quantidade' => 'integer|min:1',
-        ]);
+        $validator = OrderRequest::validateRequest($request);
 
-        $order = Order::create([
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
+
+        $order = $this->orderService->createOrder([
             'cliente_id' => $request->cliente_id,
         ]);
 
@@ -50,7 +56,7 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
-        $order = Order::find($id);
+        $order = $this->orderService->getOrderById($id);
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
@@ -67,13 +73,13 @@ class OrderController extends Controller
 
     public function destroy($id)
     {
-        $order = Order::find($id);
+        $order = $this->orderService->getOrderById($id);
 
         if (!$order) {
             return response()->json(['message' => 'Order not found'], 404);
         }
 
-        $order->delete();
+        $this->orderService->deleteOrder($id);
 
         return response()->json(['message' => 'Order deleted successfully'], 200);
     }

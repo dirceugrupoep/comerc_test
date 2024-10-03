@@ -3,6 +3,7 @@
 namespace Tests;
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
+use App\Models\Client;
 
 class ClientTest extends TestCase
 {
@@ -16,8 +17,13 @@ class ClientTest extends TestCase
 
     public function testShouldReturnAllClients()
     {
+        Client::factory()->count(3)->create();
+
         $this->json('GET', '/clients', [], ['Authorization' => 'Bearer ' . $this->getToken()])
-             ->seeStatusCode(200);
+             ->seeStatusCode(200)
+             ->seeJsonStructure([ 
+                 '*' => ['id', 'nome', 'email', 'telefone', 'data_nascimento', 'endereco', 'bairro', 'cep']
+             ]);
     }
 
     public function testShouldCreateClient()
@@ -35,8 +41,53 @@ class ClientTest extends TestCase
         $this->json('POST', '/clients', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(201)
              ->seeJson($parameters);
+
+        $this->seeInDatabase('clientes', ['email' => 'john.doe@example.com']);
     }
 
+    public function testShouldShowClient()
+    {
+        $client = Client::factory()->create();
+
+        $this->json('GET', "/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200)
+             ->seeJson([
+                 'id' => $client->id,
+                 'nome' => $client->nome,
+                 'email' => $client->email,
+             ]);
+    }
+
+    public function testShouldUpdateClient()
+    {
+        $client = Client::factory()->create();
+
+        $updateData = [
+            'nome' => 'Jane Doe',
+            'email' => 'jane.doe@example.com',
+            'telefone' => '987654321',
+        ];
+
+        $this->json('PUT', "/clients/{$client->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200)
+             ->seeJson($updateData);
+
+        $this->seeInDatabase('clientes', ['email' => 'jane.doe@example.com']);
+    }
+
+    public function testShouldDeleteClient()
+    {
+        $client = Client::factory()->create();
+
+        $this->json('DELETE', "/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+             ->seeStatusCode(200);
+
+        $this->notSeeInDatabase('clientes', ['id' => $client->id]);
+    }
+
+    /**
+     * Função auxiliar para obter o token de autenticação
+     */
     private function getToken()
     {
         $response = $this->json('POST', '/login', [
@@ -53,4 +104,3 @@ class ClientTest extends TestCase
         return $data['token'];
     }
 }
-

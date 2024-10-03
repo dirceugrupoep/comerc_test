@@ -52,6 +52,10 @@ Dentro do container, execute o comando para instalar as dependências via **Comp
 docker exec -it comerc_test_app composer install
 ```
 
+```bash
+docker exec -it comerc_test_app composer require illuminate/mail
+```
+
 ### 5. Configurar o Banco de Dados
 
 O arquivo `.env` já está configurado para o uso do banco de dados MySQL. Agora, rode as migrações para criar as tabelas:
@@ -76,11 +80,13 @@ docker exec -it comerc_test_app php artisan jwt:secret
 
 ### 7. Endpoints Disponíveis
 
+Todos os endpoints seguem o padrão api/v1/.
+
 #### Autenticação
 
 - **Login**
   - **Método**: `POST`
-  - **URL**: `/login`
+  - **URL**: `/api/v1/login`
   - **Parâmetros**: 
     ```json
     {
@@ -103,15 +109,15 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
 
 - **Listar Todos os Clientes**
   - **Método**: `GET`
-  - **URL**: `/clients`
+  - **URL**: `/api/v1/clients`
 
 - **Obter Detalhes de um Cliente**
   - **Método**: `GET`
-  - **URL**: `/clients/{id}`
+  - **URL**: `/api/v1/clients/{id}`
 
 - **Criar um Novo Cliente**
   - **Método**: `POST`
-  - **URL**: `/clients`
+  - **URL**: `/api/v1/clients`
   - **Parâmetros**:
     ```json
     {
@@ -126,7 +132,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
     ```
 - **Atualizar um Cliente**
   - **Método**: `PUT`
-  - **URL**: `/clients/{id}`
+  - **URL**: `/api/v1/clients/{id}`
 - **Parâmetros**:
     ```json
     {
@@ -141,21 +147,21 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
     ```    
 - **Deletar um Cliente**
   - **Método**: `DELETE`
-  - **URL**: `/clients/{id}`
+  - **URL**: `/api/v1/clients/{id}`
 
 #### Produtos
 
 - **Listar Todos os Produtos**
   - **Método**: `GET`
-  - **URL**: `/products`
+  - **URL**: `/api/v1/products`
 
 - **Obter um produto**
   - **Método**: `GET`
-  - **URL**: `/products`
+  - **URL**: `/api/v1/products/{id}`
 
 - **Criar um Novo Produto**
   - **Método**: `POST`
-  - **URL**: `/products`
+  - **URL**: `/api/v1/products`
   - **Parâmetros**:
     ```json
     {
@@ -166,7 +172,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
     ```
 - **Atualizar um Produto**
   - **Método**: `PUT`
-  - **URL**: `/products/{id}`
+  - **URL**: `/api/v1/products/{id}`
   - **Parâmetros**:
     ```json
     {
@@ -177,13 +183,21 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
     ```
 - **Deletar um Produto**
   - **Método**: `DELETE`
-  - **URL**: `/products`
+  - **URL**: `/api/v1/products`
 
 #### Pedidos
 
+- **Listar todos os Pedidos**
+  - **Método**: `GET`
+  - **URL**: `/orders`
+  
+- **Obter Detalhes de um Pedido**
+  - **Método**: `GET`
+  - **URL**: `/api/v1/orders/{id}`
+
 - **Criar um Novo Pedido**
   - **Método**: `POST`
-  - **URL**: `/orders`
+  - **URL**: `/api/v1/orders`
   - **Parâmetros**:
     ```json
     {
@@ -196,7 +210,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
     ```
 - **Atualizar um Pedido**
   - **Método**: `PUT`
-  - **URL**: `/orders/{id}`
+  - **URL**: `/api/v1/orders/{id}`
   - **Parâmetros**:
     ```json
     {
@@ -206,17 +220,9 @@ Authorization: Bearer eyJ0eXAiOiJKV1...
       ]
     }
     ```
-- **Obter Detalhes de um Pedido**
-  - **Método**: `GET`
-  - **URL**: `/orders/{id}`
-
-- **Listar todos os Pedidos**
-  - **Método**: `GET`
-  - **URL**: `/orders`
-
 - **Deletar um Pedido**
   - **Método**: `DELETE`
-  - **URL**: `/orders/{id}`
+  - **URL**: `/api/v1/orders/{id}`
 
 #### Email
 
