@@ -61,7 +61,7 @@ $app->singleton(
 $app->configure('app');
 $app->configure('auth');
 $app->configure('jwt'); 
-$app->configure('mail');  // Carrega o arquivo de configuração para o Mail
+$app->configure('mail'); 
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +73,7 @@ $app->configure('mail');  // Carrega o arquivo de configuração para o Mail
 |
 */
 
-class_alias(Illuminate\Support\Facades\Mail::class, 'Mail'); // Habilita o Facade de Mail
+//class_alias(Illuminate\Support\Facades\Mail::class, 'Mail');
 
 /*
 |--------------------------------------------------------------------------
@@ -86,7 +86,6 @@ class_alias(Illuminate\Support\Facades\Mail::class, 'Mail'); // Habilita o Facad
 |
 */
 
-// Define JWT middleware
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
     'jwt.auth' => Tymon\JWTAuth\Middleware\GetUserFromToken::class,
@@ -104,10 +103,8 @@ $app->routeMiddleware([
 |
 */
 
-// Register JWTAuth provider
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
-// Register the mail service provider
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 
 /*

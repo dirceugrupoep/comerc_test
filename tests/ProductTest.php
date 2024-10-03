@@ -17,9 +17,25 @@ class ProductTest extends TestCase
 
     public function testShouldReturnAllProducts()
     {
-        Product::factory()->count(3)->create();
+        Product::create([
+            'nome' => 'Product Test 1',
+            'preco' => 50.00,
+            'foto' => 'image1.jpg',
+        ]);
 
-        $this->json('GET', '/products', [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        Product::create([
+            'nome' => 'Product Test 2',
+            'preco' => 75.00,
+            'foto' => 'image2.jpg',
+        ]);
+
+        Product::create([
+            'nome' => 'Product Test 3',
+            'preco' => 100.00,
+            'foto' => 'image3.jpg',
+        ]);
+
+        $this->json('GET', 'api/v1/products', [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJsonStructure([
                  '*' => ['id', 'nome', 'preco', 'foto']
@@ -34,7 +50,7 @@ class ProductTest extends TestCase
             'foto' => 'image_url.jpg'
         ];
 
-        $this->json('POST', '/products', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('POST', 'api/v1/products', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(201)
              ->seeJson($parameters);
 
@@ -43,23 +59,31 @@ class ProductTest extends TestCase
 
     public function testShouldShowProduct()
     {
-        $product = Product::factory()->create();
+        $product = Product::create([
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ]);
 
-        $this->json('GET', "/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('GET', "api/v1/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson(['id' => $product->id, 'nome' => $product->nome]);
     }
 
     public function testShouldUpdateProduct()
     {
-        $product = Product::factory()->create();
+        $product = Product::create([
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ]);
 
         $updateData = [
             'nome' => 'Updated Product',
             'preco' => 200.00
         ];
 
-        $this->json('PUT', "/products/{$product->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('PUT', "api/v1/products/{$product->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson($updateData);
 
@@ -68,9 +92,13 @@ class ProductTest extends TestCase
 
     public function testShouldDeleteProduct()
     {
-        $product = Product::factory()->create();
+        $product = Product::create([
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ]);
 
-        $this->json('DELETE', "/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('DELETE', "api/v1/products/{$product->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200);
 
         $this->notSeeInDatabase('produtos', ['id' => $product->id]);
@@ -78,10 +106,12 @@ class ProductTest extends TestCase
 
     private function getToken()
     {
-        $response = $this->json('POST', '/login', [
+        $response = $this->json('POST', 'api/v1/login', [
             'email' => 'admin@test.com',
             'password' => '@admin$123'
         ]);
+
+        $response->seeStatusCode(200);
 
         $data = json_decode($response->response->getContent(), true);
 

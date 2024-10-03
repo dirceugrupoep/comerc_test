@@ -17,9 +17,27 @@ class ClientTest extends TestCase
 
     public function testShouldReturnAllClients()
     {
-        Client::factory()->count(3)->create();
+        Client::create([
+            'nome' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => '123 Main St',
+            'bairro' => 'Center',
+            'cep' => '12345'
+        ]);
 
-        $this->json('GET', '/clients', [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        Client::create([
+            'nome' => 'Jane Doe',
+            'email' => 'jane.doe@example.com',
+            'telefone' => '987654321',
+            'data_nascimento' => '1985-05-05',
+            'endereco' => '456 Another St',
+            'bairro' => 'South',
+            'cep' => '54321'
+        ]);
+
+        $this->json('GET', 'api/v1/clients', [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJsonStructure([ 
                  '*' => ['id', 'nome', 'email', 'telefone', 'data_nascimento', 'endereco', 'bairro', 'cep']
@@ -38,7 +56,7 @@ class ClientTest extends TestCase
             'cep' => '12345'
         ];
 
-        $this->json('POST', '/clients', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('POST', 'api/v1/clients', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(201)
              ->seeJson($parameters);
 
@@ -47,9 +65,17 @@ class ClientTest extends TestCase
 
     public function testShouldShowClient()
     {
-        $client = Client::factory()->create();
+        $client = Client::create([
+            'nome' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => '123 Main St',
+            'bairro' => 'Center',
+            'cep' => '12345'
+        ]);
 
-        $this->json('GET', "/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('GET', "api/v1/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson([
                  'id' => $client->id,
@@ -60,7 +86,15 @@ class ClientTest extends TestCase
 
     public function testShouldUpdateClient()
     {
-        $client = Client::factory()->create();
+        $client = Client::create([
+            'nome' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => '123 Main St',
+            'bairro' => 'Center',
+            'cep' => '12345'
+        ]);
 
         $updateData = [
             'nome' => 'Jane Doe',
@@ -68,7 +102,7 @@ class ClientTest extends TestCase
             'telefone' => '987654321',
         ];
 
-        $this->json('PUT', "/clients/{$client->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('PUT', "api/v1/clients/{$client->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson($updateData);
 
@@ -77,16 +111,25 @@ class ClientTest extends TestCase
 
     public function testShouldDeleteClient()
     {
-        $client = Client::factory()->create();
+        // Criando um cliente diretamente no banco de dados
+        $client = Client::create([
+            'nome' => 'John Doe',
+            'email' => 'john.doe@example.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => '123 Main St',
+            'bairro' => 'Center',
+            'cep' => '12345'
+        ]);
 
-        $this->json('DELETE', "/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('DELETE', "api/v1/clients/{$client->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200);
 
         $this->notSeeInDatabase('clientes', ['id' => $client->id]);
     }
 
     /**
-     * Função auxiliar para obter o token de autenticação
+     * FunÃ§Ã£o auxiliar para obter o token de autenticaÃ§Ã£o
      */
     private function getToken()
     {

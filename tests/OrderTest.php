@@ -19,9 +19,19 @@ class OrderTest extends TestCase
 
     public function testShouldReturnAllOrders()
     {
-        Order::factory()->count(3)->create();
+        $client = Client::create([
+            'nome' => 'Client Test',
+            'email' => 'client@test.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => 'Rua 123',
+            'bairro' => 'Centro',
+            'cep' => '12345-678'
+        ]);
 
-        $this->json('GET', '/orders', [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $order = Order::create(['cliente_id' => $client->id]);
+
+        $this->json('GET', 'api/v1/orders', [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJsonStructure([
                  '*' => ['id', 'cliente_id', 'products' => []]
@@ -30,8 +40,21 @@ class OrderTest extends TestCase
 
     public function testShouldCreateOrder()
     {
-        $client = Client::factory()->create();
-        $product = Product::factory()->create();
+        $client = Client::create([
+            'nome' => 'Client Test',
+            'email' => 'client@test.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => 'Rua 123',
+            'bairro' => 'Centro',
+            'cep' => '12345-678'
+        ]);
+
+        $product = Product::create([
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ]);
 
         $parameters = [
             'cliente_id' => $client->id,
@@ -40,7 +63,7 @@ class OrderTest extends TestCase
             ]
         ];
 
-        $this->json('POST', '/orders', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('POST', 'api/v1/orders', $parameters, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(201)
              ->seeJson(['cliente_id' => $client->id]);
 
@@ -49,17 +72,42 @@ class OrderTest extends TestCase
 
     public function testShouldShowOrder()
     {
-        $order = Order::factory()->create();
+        $client = Client::create([
+            'nome' => 'Client Test',
+            'email' => 'client@test.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => 'Rua 123',
+            'bairro' => 'Centro',
+            'cep' => '12345-678'
+        ]);
 
-        $this->json('GET', "/orders/{$order->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $order = Order::create(['cliente_id' => $client->id]);
+
+        $this->json('GET', "api/v1/orders/{$order->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson(['id' => $order->id]);
     }
 
     public function testShouldUpdateOrder()
     {
-        $order = Order::factory()->create();
-        $product = Product::factory()->create();
+        $client = Client::create([
+            'nome' => 'Client Test',
+            'email' => 'client@test.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => 'Rua 123',
+            'bairro' => 'Centro',
+            'cep' => '12345-678'
+        ]);
+
+        $order = Order::create(['cliente_id' => $client->id]);
+
+        $product = Product::create([
+            'nome' => 'Product Test',
+            'preco' => 100.00,
+            'foto' => 'image_url.jpg'
+        ]);
 
         $updateData = [
             'produtos' => [
@@ -67,7 +115,7 @@ class OrderTest extends TestCase
             ]
         ];
 
-        $this->json('PUT', "/orders/{$order->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
+        $this->json('PUT', "api/v1/orders/{$order->id}", $updateData, ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200)
              ->seeJson(['id' => $order->id]);
 
@@ -76,9 +124,19 @@ class OrderTest extends TestCase
 
     public function testShouldDeleteOrder()
     {
-        $order = Order::factory()->create();
+        $client = Client::create([
+            'nome' => 'Client Test',
+            'email' => 'client@test.com',
+            'telefone' => '123456789',
+            'data_nascimento' => '1990-01-01',
+            'endereco' => 'Rua 123',
+            'bairro' => 'Centro',
+            'cep' => '12345-678'
+        ]);
 
-        $this->json('DELETE', "/orders/{$order->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
+        $order = Order::create(['cliente_id' => $client->id]);
+
+        $this->json('DELETE', "api/v1/orders/{$order->id}", [], ['Authorization' => 'Bearer ' . $this->getToken()])
              ->seeStatusCode(200);
 
         $this->notSeeInDatabase('pedidos', ['id' => $order->id]);
@@ -86,7 +144,7 @@ class OrderTest extends TestCase
 
     private function getToken()
     {
-        $response = $this->json('POST', '/login', [
+        $response = $this->json('POST', 'api/v1/login', [
             'email' => 'admin@test.com',
             'password' => '@admin$123'
         ]);
